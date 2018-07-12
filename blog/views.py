@@ -36,27 +36,27 @@ def register(request):
 				phonenumber=phonenumber, sex=sex)
 			# Users.save()
 
-			return HttpResponse('regist success!')
+			return HttpResponse('regist success!<br>click here to <a href="login.html">login</a>')
 	else:
 		uf = UserForm()
 	return render(request, 'register.html',{'userform':uf})
 
 def login(request):
     if request.method == 'POST':
-        userform = LoginUserForm(request.POST)
-        if userform.is_valid():
-            username = userform.cleaned_data['username']
-            password = userform.cleaned_data['password']
+        uf = LoginUserForm(request.POST)
+        if uf.is_valid():
+            username = uf.cleaned_data['username']
+            password = uf.cleaned_data['password']
 
-            user = User.objects.filter(username__exact=username,password__exact=password)
+            user = Users.objects.filter(username__exact=username,password__exact=password)
 
             if user:
-                return render_to_response('index.html',{'userform':userform})
+                return render(request, 'mypage.html',{'userform':uf})
             else:
                 return HttpResponse('用户名或密码错误,请重新登录')
     else:
-        userform = UserForm()
-    return render('login.html',{'userform':userform})
+        uf = LoginUserForm()
+    return render(request, 'login.html', {'userform':uf})
 
 def archive(request):
 	posts = BlogPost.objects.all()
