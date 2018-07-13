@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head> 
+<meta charset="utf-8"> 
+<title>My space</title> 
+<link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"></script>
+<script src="https://cdn.bootcss.com/jquery/2.1.1/jquery.min.js"></script>
+<script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<style type="text/css">
+	.intop {
+		position: fixed;
+		/*position: relative;*/
+		z-index: 9;
+		top: 0px;
+		margin: auto;
+	}
+	.ContentDiv {
+		width: 70%;
+		position: relative;
+		padding-right: 15px;
+		padding-left: 15px;
+		margin: 50px auto 50px auto;
+		border: 1px solid;
+		border-radius: 15px;
+	}
+	.Contentdiv1 {
+		margin: auto 10px 20px auto;
+	}
+</style>
+</head>
+<body>
+
+<nav class="navbar navbar-inverse intop" role="navigation">
+	<div class="container-fluid">
+	<div class="navbar-header">
+		<a class="navbar-brand" href="#">胆小者社区</a>
+	</div>
+	<div>
+		<ul class="nav navbar-nav">
+			<li class="active"><a href="#">主页</a></li>
+			<li><a href="#">最胆小的事</a></li>
+			<li><a href="#">关于自己</a></li>
+		</ul>
+		<div class="col-lg-6" style="padding-top: 10px;width:40%">
+			<div class="input-group">
+				<input type="text" class="form-control" placeholder="Get你想知道的胆小事">
+				<span class="input-group-btn">
+					<button class="btn btn-default" type="button">
+									Go!
+					</button>
+				</span>
+			</div><!-- /input-group -->
+		</div><!-- /.col-lg-6 -->
+		<ul class="nav navbar-nav navbar-right">
+      		<li><a href="#"><span class="glyphicon glyphicon-user"></span> 注册</a></li>
+    		<li><a href="#"><span class="glyphicon glyphicon-log-in"></span> 登录</a></li>
+    </ul>
+	</div>
+	</div>
+</nav>
+
+{% for post in posts %}
+<div class="ContentDiv">
+	<div class="row">
+		<div class="col-md-12 column">
+			<div class="Contentdiv1">
+				<h3>
+					<!-- 一个胆小的事 -->
+					{% if post.isshowname == 1 %}
+					{{ post.userid.username }}
+					{% else %}
+					直接匿了
+					{% endif %}
+					
+				</h3>
+				<p>
+					 {{ post.content }}
+				</p>
+				<dl>
+				<dd>
+					{{ post.posttime }}
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					{{ post.postposition }}
+				</dd>
+				</dl>
+				<button type="button" class="btn btn-default">顶</button>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<button type="button" class="btn btn-default">{{ post.cai }}</button>
+			</div>
+		</div>
+	</div>
+</div>
+{% endfor %}
+
+
+<!-- <div id="footer" style="background-color:#000000;clear:both;text-align:center;">
+版权 © byyour-side.com</div> -->
+</body>
