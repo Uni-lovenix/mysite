@@ -4,6 +4,7 @@ from django.http import HttpResponse, Http404
 from django.template import Template, Context
 from django.shortcuts import render
 from blog.models import BlogPost
+from blog.models import ContentItems
 from django import forms
 from blog.models import Users
 import datetime
@@ -20,6 +21,16 @@ class UserForm(forms.Form):
 class LoginUserForm(forms.Form):
 	username = forms.CharField(label='Name', max_length=50)
 	password = forms.CharField(label='Password', max_length=50, widget=forms.PasswordInput)
+
+# No needed to use form create.
+# class ContentItemsForm(forms.Form):
+# 	cusername = forms.CharField(max_length=60)
+# 	posttime = models.DateTimeField(auto_now_add=True)
+# 	postposition = models.CharField(max_length=90)
+# 	content = models.TextField()
+# 	# picture = models.ImageField(upload_to='Content_img', default=None)
+# 	cai = models.IntegerField(default=0)
+# 	isshowname = models.BooleanField(default=True)
 
 
 def register(request):
@@ -57,6 +68,10 @@ def login(request):
     else:
         uf = LoginUserForm()
     return render(request, 'login.html', {'userform':uf})
+
+def index(request):
+	cis = ContentItems.objects.all()
+	return render(request, 'index.html', {'posts':cis})
 
 def archive(request):
 	posts = BlogPost.objects.all()

@@ -1,9 +1,10 @@
 from django.conf.urls import url
 from blog.views import archive, hello, hours_ahead, Order_notice, \
-current_time, mypage_template, future_time, login, register
+current_time, mypage_template, future_time, login, register, index
 
 urlpatterns = [
 	# url(r'^', archive),
+	url(r'^$', index),
 	url(r'^archive$', archive),
 	url(r'^hello$', hello),
 	url(r'^time/plus/(\d{1,2})/$', hours_ahead),
