@@ -25,15 +25,4 @@ class ContentItems(models.Model):
 class ContentItemsAdmin(admin.ModelAdmin):
 	list_display = ('userid', 'content', 'isshowname', 'posttime')
 
-class BlogPost(models.Model):
-	title = models.CharField(max_length=150)
-	body = models.TextField()
-	timestamp = models.DateTimeField()
-
-class BlogPostAdmin(admin.ModelAdmin):
-	list_display = ('title', 'timestamp')
-
-
-
-admin.site.register(BlogPost, BlogPostAdmin)
 admin.site.register(ContentItems, ContentItemsAdmin)

@@ -1,16 +1,14 @@
 # coding=utf8
+from django.conf import settings
 from django.contrib import auth
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponseRedirect
 from django.template import loader
 from django.http import HttpResponse, Http404
-from django.template import Template, Context
 from django.shortcuts import render
-from blog.models import BlogPost
 from blog.models import ContentItems
 from django import forms
-from blog.models import Users
 import datetime
 
 SEX_CHOICES = ((True, 'male'), (False, 'female'))
@@ -35,14 +33,15 @@ def register(request):
 			email = uf.cleaned_data['email']
 
 			if username != None and password != None and email != None:
-				User.objects.create_user(username=username, password=password, email=email)
-				User.save()
-				
-				userlogin = auth.authenticate(username=account,password=password)
-				auth.login(request,userlogin)
-				return HttpResponseRedirect(ROOT_URL)
-			else:
-				return HttpResponse('regist failed!')
+				try:
+					user = User.objects.create_user(username=username, password=password, email=email)
+					user.save()
+					
+					userlogin = auth.authenticate(username=username,password=password)
+					auth.login(request,userlogin)
+					return HttpResponseRedirect(settings.ROOT_URL)
+				except:
+					return render(request, 'register.html', {'userform':uf, 'error': 'regist failed!'})
 	else:
 		uf = UserForm()
 	return render(request, 'register.html',{'userform':uf})
@@ -55,15 +54,18 @@ def login(request):
             username = uf.cleaned_data['username']
             password = uf.cleaned_data['password']
 
-            user = User.objects.filter(username__exact=username,password__exact=password)
-
-            if user:
-                return render(request, 'mypage.html',{'userform':uf})
-            else:
-                return HttpResponse('用户名或密码错误,请重新登录')
+            user = auth.authenticate(username=username,password=password)
+            if user is not None:
+            	auth.login(request, user)
+            	return HttpResponseRedirect(settings.ROOT_URL)
+            return render(request, 'login.html', {'userform':uf, 'error':'用户名或密码错误,请重新登录'})
     else:
         uf = LoginUserForm()
     return render(request, 'login.html', {'userform':uf})
+
+@csrf_exempt
+def logout_view(request):
+    auth.logout(request)
 
 @csrf_exempt
 def index(request):
