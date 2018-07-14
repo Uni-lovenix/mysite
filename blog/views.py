@@ -1,4 +1,8 @@
 # coding=utf8
+from django.contrib import auth
+from django.contrib.auth.models import User
+from django.views.decorators.csrf import csrf_exempt
+from django.http import HttpResponseRedirect
 from django.template import loader
 from django.http import HttpResponse, Http404
 from django.template import Template, Context
@@ -16,14 +20,12 @@ class UserForm(forms.Form):
 	password = forms.CharField(label='Password', max_length=50, widget=forms.PasswordInput)
 	confirmpassword = forms.CharField(label='Confirm Password', max_length=50, widget=forms.PasswordInput)
 	email = forms.EmailField(label='email')
-	# phonenumber = forms.CharField(label='phonenumber', max_length=11)
-	# sex = forms.ChoiceField(widget=forms.RadioSelect,choices=SEX_CHOICES,label="sex")
 
 class LoginUserForm(forms.Form):
 	username = forms.CharField(label='Name', max_length=50)
 	password = forms.CharField(label='Password', max_length=50, widget=forms.PasswordInput)
 
-
+@csrf_exempt
 def register(request):
 	if request.method == 'POST':
 		uf = UserForm(request.POST)
@@ -31,18 +33,21 @@ def register(request):
 			username = uf.cleaned_data['username']
 			password = uf.cleaned_data['password']
 			email = uf.cleaned_data['email']
-			phonenumber = uf.cleaned_data['phonenumber']
-			sex = uf.cleaned_data['sex']
 
-			Users.objects.create(username=username, password=password, email=email, \
-				phonenumber=phonenumber, sex=sex)
-			# Users.save()
-
-			return HttpResponse('regist success!<br>click here to <a href="login.html">login</a>')
+			if username != None and password != None and email != None:
+				User.objects.create_user(username=username, password=password, email=email)
+				User.save()
+				
+				userlogin = auth.authenticate(username=account,password=password)
+				auth.login(request,userlogin)
+				return HttpResponseRedirect(ROOT_URL)
+			else:
+				return HttpResponse('regist failed!')
 	else:
 		uf = UserForm()
 	return render(request, 'register.html',{'userform':uf})
 
+@csrf_exempt
 def login(request):
     if request.method == 'POST':
         uf = LoginUserForm(request.POST)
@@ -50,7 +55,7 @@ def login(request):
             username = uf.cleaned_data['username']
             password = uf.cleaned_data['password']
 
-            user = Users.objects.filter(username__exact=username,password__exact=password)
+            user = User.objects.filter(username__exact=username,password__exact=password)
 
             if user:
                 return render(request, 'mypage.html',{'userform':uf})
@@ -60,23 +65,10 @@ def login(request):
         uf = LoginUserForm()
     return render(request, 'login.html', {'userform':uf})
 
+@csrf_exempt
 def index(request):
 	cis = ContentItems.objects.all()
 	return render(request, 'index.html', {'posts':cis})
-
-def archive(request):
-	posts = BlogPost.objects.all()
-	t = loader.get_template("archive.html")
-	c = {'posts':posts}
-	return HttpResponse(t.render(c))
-
-def hello(request):
-	html = 'Hello, welcome!'
-	return HttpResponse(html)
-
-def current_time(request):
-	now = datetime.datetime.now()
-	return render(request, 'app/current_time.html', {'current_date': now})
 	
 def hours_ahead(request, offset):
 	try:
@@ -87,23 +79,3 @@ def hours_ahead(request, offset):
 	html = "In %s hour(s), it will be %s" % (offset, dt)
 	return HttpResponse(html)
 
-def Order_notice(request):
-	t = loader.get_template("t1.html")
-	c = {"person_name": "Mike", 
-		"company": "Huawei",
-		"ship_date": datetime.date(2016,7,7), 
-		"order_warranty": False}
-	return HttpResponse(t.render(c))
-
-
-def mypage_template(request):
-	now = datetime.datetime.now()
-	return render(request, 'mypage.html', {'title': 'FIRST', 'current_section': now})
-
-def future_time(request, offset):
-	try:
-		offset = int(offset)
-	except ValueError:
-		raise(Http404())
-	dt = datetime.datetime.now() + datetime.timedelta(hours=offset)
-	return render(request, "app/future.html", {'hour_offset':offset, 'next_time':dt})
