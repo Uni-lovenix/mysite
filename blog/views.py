@@ -14,23 +14,14 @@ SEX_CHOICES = ((True, 'male'), (False, 'female'))
 class UserForm(forms.Form):
 	username = forms.CharField(label='Name', max_length=50)
 	password = forms.CharField(label='Password', max_length=50, widget=forms.PasswordInput)
+	confirmpassword = forms.CharField(label='Confirm Password', max_length=50, widget=forms.PasswordInput)
 	email = forms.EmailField(label='email')
-	phonenumber = forms.CharField(label='phonenumber', max_length=11)
-	sex = forms.ChoiceField(widget=forms.RadioSelect,choices=SEX_CHOICES,label="sex")
+	# phonenumber = forms.CharField(label='phonenumber', max_length=11)
+	# sex = forms.ChoiceField(widget=forms.RadioSelect,choices=SEX_CHOICES,label="sex")
 
 class LoginUserForm(forms.Form):
 	username = forms.CharField(label='Name', max_length=50)
 	password = forms.CharField(label='Password', max_length=50, widget=forms.PasswordInput)
-
-# No needed to use form create.
-# class ContentItemsForm(forms.Form):
-# 	cusername = forms.CharField(max_length=60)
-# 	posttime = models.DateTimeField(auto_now_add=True)
-# 	postposition = models.CharField(max_length=90)
-# 	content = models.TextField()
-# 	# picture = models.ImageField(upload_to='Content_img', default=None)
-# 	cai = models.IntegerField(default=0)
-# 	isshowname = models.BooleanField(default=True)
 
 
 def register(request):

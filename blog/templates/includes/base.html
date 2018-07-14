@@ -1,0 +1,37 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<html>
+<head> 
+<meta charset="utf-8"> 
+<title>{% block title %}{% endblock %}</title>
+<link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"></script>
+<script src="https://cdn.bootcss.com/jquery/2.1.1/jquery.min.js"></script>
+<script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<style type="text/css">
+	.intop {
+		position: fixed;
+		/*position: relative;*/
+		z-index: 9;
+		top: 0px;
+		margin: auto;
+	}
+	.ContentDiv {
+		width: 70%;
+		position: relative;
+		padding-right: 15px;
+		padding-left: 15px;
+		margin: 50px auto auto auto;
+		border: 1px solid;
+		border-radius: 15px;
+	}
+	.Contentdiv1 {
+		margin: auto 10px 20px auto;
+	}
+</style>
+</head>
+<body>
+	{% include "./head.html" %}
+    {% block content %}{% endblock %}
+    {% block footer %}{% endblock %}
+</body>
+</html>

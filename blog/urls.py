@@ -3,8 +3,6 @@ from blog.views import archive, hello, hours_ahead, Order_notice, \
 current_time, mypage_template, future_time, login, register, index
 
 urlpatterns = [
-	# url(r'^', archive),
-	url(r'^$', index),
 	url(r'^archive$', archive),
 	url(r'^hello$', hello),
 	url(r'^time/plus/(\d{1,2})/$', hours_ahead),
@@ -12,7 +10,7 @@ urlpatterns = [
 	url(r'^current_time$', current_time),
 	url(r'^mypage$', mypage_template),
 	url(r'^future_time/(\d{1,2})/$', future_time),
-	# url(r'^index/$', index),
     url(r'^login/$', login),
     url(r'^regist/$', register),
+    url(r'^$', index),
 	]

@@ -20,7 +20,7 @@
 		position: relative;
 		padding-right: 15px;
 		padding-left: 15px;
-		margin: 50px auto 50px auto;
+		margin: 50px auto auto auto;
 		border: 1px solid;
 		border-radius: 15px;
 	}
@@ -30,35 +30,7 @@
 </style>
 </head>
 <body>
-
-<nav class="navbar navbar-inverse intop" role="navigation">
-	<div class="container-fluid">
-	<div class="navbar-header">
-		<a class="navbar-brand" href="#">胆小者社区</a>
-	</div>
-	<div>
-		<ul class="nav navbar-nav">
-			<li class="active"><a href="#">主页</a></li>
-			<li><a href="#">最胆小的事</a></li>
-			<li><a href="#">关于自己</a></li>
-		</ul>
-		<div class="col-lg-6" style="padding-top: 10px;width:40%">
-			<div class="input-group">
-				<input type="text" class="form-control" placeholder="Get你想知道的胆小事">
-				<span class="input-group-btn">
-					<button class="btn btn-default" type="button">
-									Go!
-					</button>
-				</span>
-			</div><!-- /input-group -->
-		</div><!-- /.col-lg-6 -->
-		<ul class="nav navbar-nav navbar-right">
-      		<li><a href="#"><span class="glyphicon glyphicon-user"></span> 注册</a></li>
-    		<li><a href="#"><span class="glyphicon glyphicon-log-in"></span> 登录</a></li>
-    </ul>
-	</div>
-	</div>
-</nav>
+{% include "includes/head.html" %}
 
 {% for post in posts %}
 <div class="ContentDiv">
