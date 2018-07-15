@@ -66,11 +66,16 @@ def login(request):
 @csrf_exempt
 def logout_view(request):
     auth.logout(request)
+    return index(request)
 
 @csrf_exempt
 def index(request):
 	cis = ContentItems.objects.all()
 	return render(request, 'index.html', {'posts':cis})
+
+@csrf_exempt
+def own_zoom(request):
+	pass
 	
 def hours_ahead(request, offset):
 	try:

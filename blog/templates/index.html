@@ -1,28 +1,5 @@
 {% extends "./includes/base.html" %}
 {% block title %}胆小者社区{% endblock %}
-{% block script %}
-<style type="text/css">
-	.intop {
-		position: fixed;
-		/*position: relative;*/
-		z-index: 9;
-		top: 0px;
-		margin: auto;
-	}
-	.ContentDiv {
-		width: 70%;
-		position: relative;
-		padding-right: 15px;
-		padding-left: 15px;
-		margin: 50px auto auto auto;
-		border: 1px solid;
-		border-radius: 15px;
-	}
-	.Contentdiv1 {
-		margin: auto 10px 20px auto;
-	}
-</style>
-{% endblock %}
 
 {% block content %}
 {% for post in posts %}

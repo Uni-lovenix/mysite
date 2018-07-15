@@ -1,32 +1,20 @@
-<!DOCTYPE html>
-{% load static %}
-<html lang="zh-CN">
-<head>
-<meta http-equiv="content-type" content="text/html; charset=UTF-8">
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
-    <meta name="description" content="">
-    <meta name="author" content="">
-
-    <title>Login</title>
-    <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"></script>
-    <script src="https://cdn.bootcss.com/jquery/2.1.1/jquery.min.js"></script>
-    <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-  </head>
+{% extends "./includes/base.html" %}
+{% block script %}
 <style>
         html,body{text-align:center;margin:0px auto;}
 </style>
+{% endblock %}
+{% block title %}登录页面{% endblock %}
+
 <body>
-{% include "includes/head.html" %}
 <h1>登录页面</h1>
+{% block content %}
 <form method = 'post' enctype="multipart/form-data">
 {% csrf_token %}
 {{userform.as_p}}
 <input type="submit" value = "Login" />
 </form>
+{% endblock %}
 {{error}}
 </body>
 </html>
