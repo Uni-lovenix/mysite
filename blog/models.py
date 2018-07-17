@@ -16,7 +16,7 @@ class ContentItems(models.Model):
 	cid = models.AutoField(primary_key=True)
 	userid = models.ForeignKey(Users, on_delete=False, related_name='users_contentItems')
 	posttime = models.DateTimeField(auto_now_add=True)
-	postposition = models.CharField(max_length=90)
+	postposition = models.CharField(max_length=90, default='')
 	content = models.TextField()
 	picture = models.ImageField(upload_to='Content_img', default=None)
 	cai = models.IntegerField(default=0)

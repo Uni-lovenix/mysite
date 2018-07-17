@@ -2,6 +2,7 @@
 from django.conf import settings
 from django.contrib import auth
 from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponseRedirect
 from django.template import loader
@@ -10,6 +11,7 @@ from django.shortcuts import render
 from blog.models import ContentItems
 from django import forms
 import datetime
+import json
 
 SEX_CHOICES = ((True, 'male'), (False, 'female'))
 
@@ -28,9 +30,19 @@ def register(request):
 	if request.method == 'POST':
 		uf = UserForm(request.POST)
 		if uf.is_valid():
+			error = ''
 			username = uf.cleaned_data['username']
 			password = uf.cleaned_data['password']
+			password2 = uf.cleaned_data['confirmpassword']
 			email = uf.cleaned_data['email']
+			user_model = list(User.objects.all().values_list('username'))
+			for i in user_model:
+				if username in i:
+					error += '用户名已存在!    '
+			if password != password2:
+				error += '两次密码输入不一致！请重新输入!'
+			if error != '':
+				return render(request, "register.html", {'userform':uf, 'error':error})
 
 			if username != None and password != None and email != None:
 				try:
@@ -74,15 +86,30 @@ def index(request):
 	return render(request, 'index.html', {'posts':cis})
 
 @csrf_exempt
-def own_zoom(request):
-	pass
-	
-def hours_ahead(request, offset):
-	try:
-		offset = int(offset)
-	except ValueError:
-		raise(Http404())
-	dt = datetime.datetime.now() + datetime.timedelta(hours=offset)
-	html = "In %s hour(s), it will be %s" % (offset, dt)
-	return HttpResponse(html)
+@login_required
+def own_zone(request):
+	username = request.user.username
+	userid = request.user.id
+	posts = ContentItems.objects.filter(userid_id=userid)
+	return render(request, 'ownzone.html', {'username':username, 'posts':posts})
 
+@login_required
+@csrf_exempt
+def ajax_submit(request):
+	ret = {'status':True, 'error':None, 'data':None}
+	print(request)
+	print('111111111111111111111111111')
+	if request.method=="POST":
+		content = request.POST.get("content")
+		# isanonymous = request.POST.get("IsAnonymous")
+		if content == '':
+			ret['status'] = False
+			ret['error'] = '空文本不能提交...'
+			return HttpResponse(json.dumps(ret))
+		contentitem = ContentItems.objects.create(userid_id=request.user.id, postposition='', content=content, isshowname=True)
+		contentitem.save()
+		return HttpResponse(json.dumps(ret))
+	ret['status'] = False
+	ret['error'] = '发布失败'
+	return HttpResponse(json.dumps(ret))
+	
