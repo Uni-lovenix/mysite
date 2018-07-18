@@ -90,7 +90,7 @@ def index(request):
 def own_zone(request):
 	username = request.user.username
 	userid = request.user.id
-	posts = ContentItems.objects.filter(userid_id=userid)
+	posts = ContentItems.objects.filter(uid=userid)
 	return render(request, 'ownzone.html', {'username':username, 'posts':posts})
 
 @login_required
@@ -106,7 +106,7 @@ def ajax_submit(request):
 			ret['status'] = False
 			ret['error'] = '空文本不能提交...'
 			return HttpResponse(json.dumps(ret))
-		contentitem = ContentItems.objects.create(userid_id=request.user.id, postposition='', content=content, isshowname=True)
+		contentitem = ContentItems.objects.create(uid=request.user, postposition='', content=content, isshowname=True)
 		contentitem.save()
 		return HttpResponse(json.dumps(ret))
 	ret['status'] = False
