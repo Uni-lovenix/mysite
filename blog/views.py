@@ -8,7 +8,7 @@ from django.http import HttpResponseRedirect
 from django.template import loader
 from django.http import HttpResponse, Http404
 from django.shortcuts import render
-from blog.models import ContentItems
+from blog.models import ContentItems, CaiZan
 from django import forms
 import datetime
 import json
@@ -97,8 +97,6 @@ def own_zone(request):
 @csrf_exempt
 def ajax_submit(request):
 	ret = {'status':True, 'error':None, 'data':None}
-	print(request)
-	print('111111111111111111111111111')
 	if request.method=="POST":
 		content = request.POST.get("content")
 		# isanonymous = request.POST.get("IsAnonymous")
@@ -113,3 +111,36 @@ def ajax_submit(request):
 	ret['error'] = '发布失败'
 	return HttpResponse(json.dumps(ret))
 	
+@csrf_exempt
+def ajax_checkusername(request):
+	pass
+
+@login_required
+@csrf_exempt
+def ajax_cai(request):
+	ret = {'status':True, 'error':None, 'data':None}
+	cid = request.POST.get("cid")
+	if request.method=="POST":
+		try:
+			cid=int(cid)
+		except (TypeError,e):
+			ret['status']=False
+			ret['error']=e
+			return HttpResponse(json.dumps(ret))
+		c = ContentItems.objects.get(cid=cid)
+		cz = CaiZan.objects.filter(uid=request.user, cid=cid)
+		if cz:
+			CaiZan.objects.filter(uid=request.user, cid=cid).delete()
+			cai = c.cai
+			c.cai = cai-1
+			c.save()
+		else:
+			newcai = CaiZan.objects.create(uid=request.user, cid=c)
+			newcai.save()
+			cai = c.cai
+			c.cai = cai+1
+			c.save()
+		ret['data']=c.cai
+		return HttpResponse(json.dumps(ret))
+	ret['error']='Unknown error.'
+	return HttpResponse(json.dumps(ret))

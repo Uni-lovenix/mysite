@@ -26,16 +26,34 @@
 					{{ post.postposition }}
 				</dd>
 				</dl>
-				<button type="button" class="btn btn-default">顶&nbsp;{{post.ding}}</button>
-				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-				<button type="button" class="btn btn-default">踩&nbsp;{{ post.cai }}</button>
+				<!-- <button id="btnzan{{post.cid}}" onclick="ajaxzan({{post.cid}})" type="button" class="btn btn-default">顶&nbsp;{{post.ding}}</button>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -->
+				<button id="btncai{{post.cid}}" onclick="ajaxcai({{post.cid}});" type="button" class="btn btn-default">踩&nbsp;<b>{{ post.cai }}</b></button>
 			</div>
 		</div>
 	</div>
 </div>
 {% endfor %}
+<script type="text/javascript">
+function ajaxcai(cid){
+    $.ajax({
+        url: "/ajax_cai/",
+        type: "POST",
+        data:{"cid":cid},
+        headers:{"X-CSRFToken":$('[name="csrfmiddlewaretoken"]').val()},
+        success: function(data){
+            var obj = JSON.parse(data);//字符串转对象
+            if(obj.status){
+                $('#btncai'+cid+' > b').text(obj.data)
+            }else{
+                alert(obj.error);
+            }
+        }
+    });
+}
+</script>
+
 {% endblock %}
 
 <!-- <div id="footer" style="background-color:#000000;clear:both;text-align:center;">
 版权 © byyour-side.com</div> -->
-</body>
