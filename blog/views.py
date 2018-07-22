@@ -82,7 +82,7 @@ def logout_view(request):
 
 @csrf_exempt
 def index(request):
-	cis = ContentItems.objects.all()
+	cis = ContentItems.objects.all().order_by('-posttime')
 	return render(request, 'index.html', {'posts':cis})
 
 @csrf_exempt
@@ -90,7 +90,7 @@ def index(request):
 def own_zone(request):
 	username = request.user.username
 	userid = request.user.id
-	posts = ContentItems.objects.filter(uid=userid)
+	posts = ContentItems.objects.filter(uid=userid).order_by('-posttime')
 	return render(request, 'ownzone.html', {'username':username, 'posts':posts})
 
 @login_required
@@ -119,8 +119,8 @@ def ajax_checkusername(request):
 @csrf_exempt
 def ajax_cai(request):
 	ret = {'status':True, 'error':None, 'data':None}
-	cid = request.POST.get("cid")
 	if request.method=="POST":
+		cid = request.POST.get("cid")
 		try:
 			cid=int(cid)
 		except (TypeError,e):
@@ -144,3 +144,16 @@ def ajax_cai(request):
 		return HttpResponse(json.dumps(ret))
 	ret['error']='Unknown error.'
 	return HttpResponse(json.dumps(ret))
+
+@login_required
+@csrf_exempt
+def ajax_remove_content(request):
+	ret = {'status':True, 'error':None, 'data':None}
+	if request.method=="POST":
+		cid = request.POST.get('cid')
+		ContentItems.objects.get(cid=cid).delete()
+		return HttpResponse(json.dumps(ret))
+	ret['status']=False
+	ret['error']='Unknown error.'
+	return HttpResponse(json.dumps(ret))
+

@@ -46,7 +46,7 @@
 	</div>
 </div>
 {% for post in posts %}
-<div class="owndiv">
+<div class="owndiv" id="div{{post.cid}}">
 	<div class="row">
 		<div class="col-md-12 column">
 			<div class="Contentdiv1">
@@ -63,13 +63,30 @@
 				<!-- <button type="button" class="btn btn-default">顶&nbsp;{{ post.ding }}</button>
 				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -->
 				<button type="button" class="btn btn-default">踩&nbsp;{{ post.cai }}</button>
-				<button type="button" class="btn btn-default">删除</button>
+				<button type="button" onclick="ajax_delete({{ post.cid }});" class="btn btn-default">删除</button>
 			</div>
 		</div>
 	</div>
 </div>
 {% endfor %}
 <script type="text/javascript">
+function ajax_delete(cid){
+    $.ajax({
+        url: "/ajax_remove_content/",
+        type: "POST",
+        data: {"cid": cid},
+        headers:{"X-CSRFToken":$('[name="csrfmiddlewaretoken"]').val()},
+        success: function(data){
+            var obj = JSON.parse(data);//字符串转对象
+            if(obj.status){
+            	$('#div'+cid).remove();
+            }else{
+                // $('#erro_msg').text(obj.error);
+                alert(obj.error);
+            }
+        }
+    });
+}
 function ajaxpost(){
     $.ajax({
         url: "/submit_text/",
