@@ -12,6 +12,7 @@ from blog.models import ContentItems, CaiZan
 from django import forms
 import datetime
 import json
+import re
 
 SEX_CHOICES = ((True, 'male'), (False, 'female'))
 
@@ -25,6 +26,12 @@ class LoginUserForm(forms.Form):
 	username = forms.CharField(label='Name', max_length=50)
 	password = forms.CharField(label='Password', max_length=50, widget=forms.PasswordInput)
 
+def check_illegal_char(s):
+	illegal_char = r'[\s+\.\!\/_,$%^*(+\"\')]+|[+——()?【】“”！，。？、~@#￥%……&*（）]+'
+	if re.match(illegal_char, s)==None:
+		return True
+	return False
+
 @csrf_exempt
 def register(request):
 	if request.method == 'POST':
@@ -32,6 +39,9 @@ def register(request):
 		if uf.is_valid():
 			error = ''
 			username = uf.cleaned_data['username']
+			if check_illegal_char(username)==False:
+				return render(request, 'register.html', {'userform':uf, 'error': '用户名含有非法字符!'})
+
 			password = uf.cleaned_data['password']
 			password2 = uf.cleaned_data['confirmpassword']
 			email = uf.cleaned_data['email']
