@@ -81,7 +81,7 @@ $(".postBtn").click(function(){
         success: function(data){
             var obj = JSON.parse(data);
             if(obj.status){
-                func();
+                loadNewComment(cid,obj.data);
             }else{
                 alert(obj.error);
             }
@@ -89,10 +89,17 @@ $(".postBtn").click(function(){
 		});
 	});
 
+var comments=new Array();
 
 $(".flip").click(function(){
     $(".commentpanel:eq(" + $(this).index(".flip") + ")").slideToggle("slow", function(){
     	var cid = $(this).attr("name");
+    	for (i=0;i<comments.length;i++){
+    		if (cid==comments[i]){
+    			return false;
+    		}
+    	}
+    	comments.push(cid);
     	$.ajax({
     		url: "/ajax_comment/",
     		type: "POST",
@@ -100,7 +107,6 @@ $(".flip").click(function(){
     		headers:{"X-CSRFToken":$('[name="csrfmiddlewaretoken"]').val()},
         	success: function(data){
 	            if(data.length>0){
-	                // $("#lol"+cid).append("<li>"+obj.data+"</li>");
 	                $("#comment"+cid).html(data);
 	            }
         	}
@@ -111,27 +117,13 @@ $(".flip").click(function(){
 
 });
 
-var layer=document.createElement("div");
-layer.id="layer";
-function func()
+function loadNewComment(cid, data)
 {
-    var style=
-    {
-        background:"#f00",
-        position:"absolute",
-        zIndex:10,
-        width:"200px",
-        height:"200px",
-        left:"200px",
-        top:"200px"
-    }
-    for(var i in style)
-        layer.style[i]=style[i];   
-    if(document.getElementById("layer")==null)
-    {
-        document.body.appendChild(layer);
-        setTimeout("document.body.removeChild(layer)",2000)
-    }
+    var txt1=$("<b></b>").text(data.username+":");
+	var txt2=$("<i></i>").text(data.commenttime);
+	var txt3=data.comment;
+	var div1=$("<div></div>").append(txt1, txt3, txt2);
+	$("#comment"+cid).append(div1); 
 }
 </script>
 

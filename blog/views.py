@@ -139,7 +139,7 @@ def ajax_cai(request):
 	if request.method=="POST":
 		cid = request.POST.get("cid")
 		cid = check_cid(cid)
-		if cid!=-1:
+		if cid==-1:
 			ret['status']=False
 			ret['error']='失败!'
 			return HttpResponse(json.dumps(ret))
@@ -189,6 +189,13 @@ def ajax_submit_comment(request):
 				if content:
 					newcomment = Comment.objects.create(uid=request.user, cid=content, cuid=content.uid, comment=cmt)
 					newcomment.save()
+					nc = { "username":request.user.username,
+						"comment":cmt,
+						# "commenttime":str(newcomment.commenttime)
+						"commenttime":newcomment.commenttime.ctime()
+						}
+					# nc = serializers.serialize("json", [newcomment])
+					ret['data']=nc
 					return HttpResponse(json.dumps(ret))
 		ret['status']=False
 		ret['error']='提交评论失败!'
@@ -205,6 +212,5 @@ def ajax_comment(request):
 				comments = Comment.objects.filter(cid=cid).order_by('-commenttime')
 				# comments = serializers.serialize("json",Comment.objects.filter(cid=cid).order_by('-commenttime'))
 				return render(request, 'includes/comment.html', {'comments':comments})
-				# return HttpResponse(json.dumps(ret))
 	except:
 		return "<div>无评论!</div>"
