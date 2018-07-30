@@ -1,0 +1,9 @@
+{% for comment in comments %}
+<div>
+<p>
+<b>{{comment.uid.username}}:</b>
+{{comment.comment}}
+<span>{{comment.commenttime}}</span>
+</p>
+</div>
+{% endfor %}

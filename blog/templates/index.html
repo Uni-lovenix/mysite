@@ -30,11 +30,8 @@
 				<input type="button" value="评论" class="btn btn-default commentbtn flip" >
 			</div>
 			<div name="{{post.cid}}" class="commentpanel">
-				<div>
-					<em>ddd:</em>
-					<dd>sjfdslakjflsakjfis sdklfjsl skljf.</dd>
-					<dd>2018.9.3 10:30</dd>
-					<ol id="lol{{post.cid}}"></ol>
+				<div id="comment{{post.cid}}">
+					
 				</div>
 				<div class="Input_Box">
 					<textarea id="ttt{{post.cid}}" class="Input_text" maxlength="200" onchange="this.value=this.value.substring(0, 200)" onkeydown="this.value=this.value.substring(0, 200)" onkeyup="this.value=this.value.substring(0, 200)"></textarea>
@@ -102,11 +99,9 @@ $(".flip").click(function(){
     		data:{"cid": cid},
     		headers:{"X-CSRFToken":$('[name="csrfmiddlewaretoken"]').val()},
         	success: function(data){
-	            var obj = JSON.parse(data);
-	            if(obj.status){
-	                $("#lol"+cid).append("<li>"+obj.data+"</li>");
-	            }else{
-	                alert(obj.error);
+	            if(data.length>0){
+	                // $("#lol"+cid).append("<li>"+obj.data+"</li>");
+	                $("#comment"+cid).html(data);
 	            }
         	}
     	})

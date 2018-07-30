@@ -197,14 +197,14 @@ def ajax_submit_comment(request):
 
 @csrf_exempt
 def ajax_comment(request):
-	ret = {'status':True, 'error':None, 'data':None}
-	if request.method=="POST":
-		cid = request.POST.get("cid")
-		cid = check_cid(cid)
-		if cid!=-1:
-			comments = serializers.serialize("json",Comment.objects.filter(cid=cid).order_by('-commenttime'))
-			ret['data']=comments
-			return HttpResponse(json.dumps(ret))
-	ret['status']=False
-	ret['error']='Get comments failed.'
-	return HttpResponse(json.dumps(ret))
+	try:
+		if request.method=="POST":
+			cid = request.POST.get("cid")
+			cid = check_cid(cid)
+			if cid!=-1:
+				comments = Comment.objects.filter(cid=cid).order_by('-commenttime')
+				# comments = serializers.serialize("json",Comment.objects.filter(cid=cid).order_by('-commenttime'))
+				return render(request, 'includes/comment.html', {'comments':comments})
+				# return HttpResponse(json.dumps(ret))
+	except:
+		return "<div>无评论!</div>"
