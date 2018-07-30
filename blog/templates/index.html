@@ -26,14 +26,26 @@
 					{{ post.postposition }}
 				</dd>
 				</dl>
-				<!-- <button id="btnzan{{post.cid}}" onclick="ajaxzan({{post.cid}})" type="button" class="btn btn-default">顶&nbsp;{{post.ding}}</button>
-				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -->
 				<button id="btncai{{post.cid}}" onclick="ajaxcai({{post.cid}});" type="button" class="btn btn-default">踩&nbsp;<b>{{ post.cai }}</b></button>
+				<input type="button" value="评论" class="btn btn-default commentbtn flip" >
 			</div>
+			<div name="{{post.cid}}" class="commentpanel">
+				<div>
+					<em>ddd:</em>
+					<dd>sjfdslakjflsakjfis sdklfjsl skljf.</dd>
+					<dd>2018.9.3 10:30</dd>
+					<ol id="lol{{post.cid}}"></ol>
+				</div>
+				<div class="Input_Box">
+					<textarea id="ttt{{post.cid}}" class="Input_text" maxlength="200" onchange="this.value=this.value.substring(0, 200)" onkeydown="this.value=this.value.substring(0, 200)" onkeyup="this.value=this.value.substring(0, 200)"></textarea>
+						<a class="postBtn" name="{{post.cid}}">提交</a>
+				</div>
+    		</div>
 		</div>
 	</div>
 </div>
 {% endfor %}
+
 <script type="text/javascript">
 function ajaxcai(cid){
     $.ajax({
@@ -52,7 +64,96 @@ function ajaxcai(cid){
     });
 }
 </script>
+<script type="text/javascript">
+$(document).ready(function(){
+$(".postBtn").click(function(){
+	var cid=$(this).attr("name");
+	// alert($(this).parent().text());
+	// alert($("#ttt"+cid).val());
+	// var comment=$(this).parent().find($(".Input_text")).text();
+	comment=$("#ttt"+cid).val();
+	if(comment==''){
+		alert("评论不能为空！");
+		return false;
+	}
+	$.ajax({
+		url: "/ajax_submit_comment/",
+		type: "POST",
+		data: {"cid": cid, "comment":comment},
+		headers:{"X-CSRFToken":$('[name="csrfmiddlewaretoken"]').val()},
+        success: function(data){
+            var obj = JSON.parse(data);
+            if(obj.status){
+                func();
+            }else{
+                alert(obj.error);
+            }
+        }
+		});
+	});
 
+
+$(".flip").click(function(){
+    $(".commentpanel:eq(" + $(this).index(".flip") + ")").slideToggle("slow", function(){
+    	var cid = $(this).attr("name");
+    	$.ajax({
+    		url: "/ajax_comment/",
+    		type: "POST",
+    		data:{"cid": cid},
+    		headers:{"X-CSRFToken":$('[name="csrfmiddlewaretoken"]').val()},
+        	success: function(data){
+	            var obj = JSON.parse(data);
+	            if(obj.status){
+	                $("#lol"+cid).append("<li>"+obj.data+"</li>");
+	            }else{
+	                alert(obj.error);
+	            }
+        	}
+    	})
+    });
+  });
+
+
+});
+
+var layer=document.createElement("div");
+layer.id="layer";
+function func()
+{
+    var style=
+    {
+        background:"#f00",
+        position:"absolute",
+        zIndex:10,
+        width:"200px",
+        height:"200px",
+        left:"200px",
+        top:"200px"
+    }
+    for(var i in style)
+        layer.style[i]=style[i];   
+    if(document.getElementById("layer")==null)
+    {
+        document.body.appendChild(layer);
+        setTimeout("document.body.removeChild(layer)",2000)
+    }
+}
+</script>
+
+<style type="text/css"> 
+p.flip
+{
+margin:0px;
+padding:5px;
+text-align:center;
+background:#e5eecc;
+border:solid 1px #c3c3c3;
+}
+div.commentpanel
+{
+display:none;
+}
+</style>
 {% endblock %}
 
 <!-- <div id="footer" style="background-color:#000000;clear:both;text-align:center;">

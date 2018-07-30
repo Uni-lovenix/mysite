@@ -11,5 +11,7 @@ urlpatterns = [
     url(r'^submit_text/$', views.ajax_submit, name='submit_text'),
     url(r'^ajax_cai/$', views.ajax_cai, name='ajax_cai'),
     url(r'^ajax_remove_content/$', views.ajax_remove_content, name='ajax_remove_content'),
+    url(r'^ajax_submit_comment/$', views.ajax_submit_comment, name='ajax_submit_comment'),
+    url(r'^ajax_comment/$', views.ajax_comment, name='ajax_comment'),
     url(r'^$', views.index, name='index'),
 	]

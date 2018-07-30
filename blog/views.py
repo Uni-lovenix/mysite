@@ -8,8 +8,9 @@ from django.http import HttpResponseRedirect
 from django.template import loader
 from django.http import HttpResponse, Http404
 from django.shortcuts import render
-from blog.models import ContentItems, CaiZan
+from blog.models import ContentItems, CaiZan, Comment
 from django import forms
+from django.core import serializers
 import datetime
 import json
 import re
@@ -17,10 +18,10 @@ import re
 SEX_CHOICES = ((True, 'male'), (False, 'female'))
 
 class UserForm(forms.Form):
-	username = forms.CharField(label='Name', max_length=50)
+	username = forms.CharField(label='Name', max_length=50, error_messages={"required":"username不能为空",})
 	password = forms.CharField(label='Password', max_length=50, widget=forms.PasswordInput)
 	confirmpassword = forms.CharField(label='Confirm Password', max_length=50, widget=forms.PasswordInput)
-	email = forms.EmailField(label='email')
+	email = forms.EmailField(label='email', error_messages={"required":"email不能为空",})
 
 class LoginUserForm(forms.Form):
 	username = forms.CharField(label='Name', max_length=50)
@@ -31,6 +32,13 @@ def check_illegal_char(s):
 	if re.match(illegal_char, s)==None:
 		return True
 	return False
+
+def check_cid(cid):
+	try:
+		cid = int(cid)
+	except:
+		return -1
+	return cid
 
 @csrf_exempt
 def register(request):
@@ -109,7 +117,6 @@ def ajax_submit(request):
 	ret = {'status':True, 'error':None, 'data':None}
 	if request.method=="POST":
 		content = request.POST.get("content")
-		# isanonymous = request.POST.get("IsAnonymous")
 		if content == '':
 			ret['status'] = False
 			ret['error'] = '空文本不能提交...'
@@ -131,11 +138,10 @@ def ajax_cai(request):
 	ret = {'status':True, 'error':None, 'data':None}
 	if request.method=="POST":
 		cid = request.POST.get("cid")
-		try:
-			cid=int(cid)
-		except (TypeError,e):
+		cid = check_cid(cid)
+		if cid!=-1:
 			ret['status']=False
-			ret['error']=e
+			ret['error']='失败!'
 			return HttpResponse(json.dumps(ret))
 		c = ContentItems.objects.get(cid=cid)
 		cz = CaiZan.objects.filter(uid=request.user, cid=cid)
@@ -161,9 +167,44 @@ def ajax_remove_content(request):
 	ret = {'status':True, 'error':None, 'data':None}
 	if request.method=="POST":
 		cid = request.POST.get('cid')
-		ContentItems.objects.get(cid=cid).delete()
-		return HttpResponse(json.dumps(ret))
+		cid = check_cid(cid)
+		if cid!=-1:
+			ContentItems.objects.get(cid=cid).delete()
+			return HttpResponse(json.dumps(ret))
 	ret['status']=False
 	ret['error']='Unknown error.'
 	return HttpResponse(json.dumps(ret))
 
+@login_required
+@csrf_exempt
+def ajax_submit_comment(request):
+	ret = {'status':True, 'error':None, 'data':None}
+	if request.method=="POST":
+		cmt = request.POST.get("comment")
+		if cmt!="" and cmt!=None:
+			cid = request.POST.get("cid")
+			cid = check_cid(cid)
+			if cid!=-1:
+				content = ContentItems.objects.get(cid=cid)
+				if content:
+					newcomment = Comment.objects.create(uid=request.user, cid=content, cuid=content.uid, comment=cmt)
+					newcomment.save()
+					return HttpResponse(json.dumps(ret))
+		ret['status']=False
+		ret['error']='提交评论失败!'
+	return HttpResponse(json.dumps(ret))
+
+
+@csrf_exempt
+def ajax_comment(request):
+	ret = {'status':True, 'error':None, 'data':None}
+	if request.method=="POST":
+		cid = request.POST.get("cid")
+		cid = check_cid(cid)
+		if cid!=-1:
+			comments = serializers.serialize("json",Comment.objects.filter(cid=cid).order_by('-commenttime'))
+			ret['data']=comments
+			return HttpResponse(json.dumps(ret))
+	ret['status']=False
+	ret['error']='Get comments failed.'
+	return HttpResponse(json.dumps(ret))
