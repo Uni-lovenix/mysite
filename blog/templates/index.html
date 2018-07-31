@@ -60,6 +60,9 @@ function ajaxcai(cid){
         }
     });
 }
+function cleantextarea(cid){
+	$("#ttt"+cid).val("");
+}
 </script>
 <script type="text/javascript">
 $(document).ready(function(){
@@ -69,10 +72,12 @@ $(".postBtn").click(function(){
 	// alert($("#ttt"+cid).val());
 	// var comment=$(this).parent().find($(".Input_text")).text();
 	comment=$("#ttt"+cid).val();
+	
 	if(comment==''){
 		alert("评论不能为空！");
 		return false;
 	}
+	cleantextarea(cid);
 	$.ajax({
 		url: "/ajax_submit_comment/",
 		type: "POST",

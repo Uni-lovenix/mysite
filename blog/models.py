@@ -11,7 +11,6 @@ class ContentItems(models.Model):
 	postposition = models.CharField(max_length=90, default='')
 	content = models.TextField()
 	picture = models.ImageField(upload_to='Content_img', default=None)
-	# zan = models.IntegerField(default=0)
 	cai = models.IntegerField(default=0)
 	isshowname = models.BooleanField(default=True)
 
