@@ -100,8 +100,26 @@ def logout_view(request):
 
 @csrf_exempt
 def index(request):
-	cis = ContentItems.objects.all().order_by('-posttime')
-	return render(request, 'index.html', {'posts':cis})
+	# cis = ContentItems.objects.all().order_by('-posttime')
+	# return render(request, 'index.html', {'posts':cis})
+	return render(request, 'index.html')
+
+@csrf_exempt
+def ajax_getcontents(request):
+	ret={'status':True, 'error':None, 'data':None}
+	if request.method=="POST":
+		current=request.POST.get('current')
+		num=request.POST.get('num')
+		current=check_cid(current)
+		num=check_cid(num)
+		if current==-1 or num==-1:
+			ret['status']=False
+			ret['error']='request data error.'
+			return HttpResponse(json.dumps(ret))
+		if num>7:
+			num=7
+		posts=ContentItems.objects.all().order_by('-posttime')[current:current+num]
+		return render(request, 'includes/content.html', {'posts':posts})
 
 @csrf_exempt
 @login_required
