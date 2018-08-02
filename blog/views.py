@@ -106,18 +106,14 @@ def index(request):
 
 @csrf_exempt
 def ajax_getcontents(request):
-	ret={'status':True, 'error':None, 'data':None}
 	if request.method=="POST":
 		current=request.POST.get('current')
-		num=request.POST.get('num')
 		current=check_cid(current)
-		num=check_cid(num)
+		num=7
 		if current==-1 or num==-1:
 			ret['status']=False
 			ret['error']='request data error.'
-			return HttpResponse(json.dumps(ret))
-		if num>7:
-			num=7
+			return Http404()
 		posts=ContentItems.objects.all().order_by('-posttime')[current:current+num]
 		return render(request, 'includes/content.html', {'posts':posts})
 
