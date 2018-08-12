@@ -1,3 +1,43 @@
+.intop {
+    position: fixed;
+    z-index: 9;
+    top: 0px;
+    margin: auto;
+    color: red;
+}
+.midDiv {
+    position: relative;
+    margin: 50px auto auto auto;
+    width: 80%;
+}
+.ContentDiv {
+    width: 70%;
+    position: relative;
+    padding-right: 15px;
+    padding-left: 15px;
+    margin: 50px auto auto auto;
+    border: 1px solid;
+    border-radius: 15px;
+}
+.Contentdiv1 {
+    margin: auto 10px 20px auto;
+}
+p.flip
+{
+margin:0px;
+padding:5px;
+text-align:center;
+background:#e5eecc;
+border:solid 1px #c3c3c3;
+}
+div.commentpanel
+{
+display:none;
+}
+.div111{
+    position: fixed;
+    margin: 200px 300px auto auto;
+}
 .commentbtn {
     position: relative;
     left: 50px;
