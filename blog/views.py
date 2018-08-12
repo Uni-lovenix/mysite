@@ -11,6 +11,7 @@ from django.shortcuts import render
 from blog.models import ContentItems, CaiZan, Comment
 from django import forms
 from django.core import serializers
+from django.db.models import Q
 import datetime
 import json
 import re
@@ -125,7 +126,7 @@ def own_zone(request):
 	posts = ContentItems.objects.filter(uid=userid).order_by('-posttime')
 	return render(request, 'ownzone.html', {'username':username, 'posts':posts})
 
-@login_required
+@login_required(redirect_field_name='login')
 @csrf_exempt
 def ajax_submit(request):
 	ret = {'status':True, 'error':None, 'data':None}
@@ -146,7 +147,7 @@ def ajax_submit(request):
 def ajax_checkusername(request):
 	pass
 
-@login_required
+@login_required(login_url='/login/')
 @csrf_exempt
 def ajax_cai(request):
 	ret = {'status':True, 'error':None, 'data':None}
@@ -228,3 +229,12 @@ def ajax_comment(request):
 				return render(request, 'includes/comment.html', {'comments':comments})
 	except:
 		return "<div>无评论!</div>"
+
+
+@csrf_exempt
+def search(request):
+    if request.method == 'POST':
+        keyword = request.POST.get('k')
+        contents = ContentItems.objects.filter(Q(content__icontains=keyword))
+        print(comments)
+        return render(request, 'includes/content.html', {'comments': content})

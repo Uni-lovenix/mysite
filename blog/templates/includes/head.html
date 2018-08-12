@@ -9,15 +9,13 @@
 			<li><a href="#">最胆小的事</a></li>
 			<li><a href="#">关于自己</a></li>
 		</ul>
-		<div class="col-lg-6" style="padding-top: 10px;width:40%">
+		<div class="col-lg-6" style="padding-top: 10px;width:40%; display: inline-flex;">
 			<div class="input-group">
-				<input type="text" class="form-control" placeholder="Get你想知道的胆小事">
-				<span class="input-group-btn">
-					<button class="btn btn-default" type="button">
-									Go!
-					</button>
+				<input type="text" id="search-text" class="form-control" placeholder="Get你想知道的胆小事" name="q">
+			    <span class="input-group-btn">
+			    	<input class="btn btn-default search-btn" type="submit" value="Go!">
 				</span>
-			</div><!-- /input-group -->
+			</div>
 		</div><!-- /.col-lg-6 -->
 		{% if request.user.is_authenticated %}
 		<ul class="nav navbar-nav navbar-right">
@@ -34,7 +32,7 @@
 			</li>
    		</ul>
 		{% else %}
-		<ul class="nav navbar-nav navbar-right">
+		<ul class="nav navbar-nav navbar-right" style="display: inline;">
   			<li><a href="{% url 'blog:register' %}""><span class="glyphicon glyphicon-user"></span> 注册</a></li>
 			<li><a href="{% url 'blog:login' %}"><span class="glyphicon glyphicon-log-in"></span> 登录</a></li>
    		</ul>

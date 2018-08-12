@@ -1,5 +1,6 @@
-from django.conf.urls import url
+from django.conf.urls import url, include
 import blog.views as views
+
 
 app_name='blog'
 

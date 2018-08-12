@@ -1,6 +1,9 @@
 {% extends "./includes/base.html" %}
 {% block title %}胆小者社区{% endblock %}
-
+{% block script %}
+<script src="../static/script/index.js"></script>
+<script src="../static/script/content.js"></script>
+{% endblock %}
 {% block content %}
 <div class="div111">
 	<span id="topp"></span>
@@ -11,59 +14,4 @@
 <div id="content">
 	
 </div>
-<script type="text/javascript">
-var current = 0;
-var num=7;
-var loaded=false;
-
-function loadcontent(){
-	if (loaded==false){
-		loaded=true;
-		$.ajax({
-			url: "/ajax_getcontents/",
-			type: "POST",
-			data: {'current':current},
-			headers:{"X-CSRFToken":$('[name="csrfmiddlewaretoken"]').val()},
-			success: function(data){
-				if(data.length>0)
-				{
-	                $("#content").append(data);
-	                current+=num;
-	                loaded=false;
-				}
-			}
-		})
-	}
-}
-
-$(window).load(function(){
-	loadcontent();
-})
-
-$(window).scroll(function(event) {
-	if ($(document).scrollTop() >= ($(document).height() - window.screen.height))
-	    loadcontent();
-});
-</script>
-<style type="text/css"> 
-p.flip
-{
-margin:0px;
-padding:5px;
-text-align:center;
-background:#e5eecc;
-border:solid 1px #c3c3c3;
-}
-div.commentpanel
-{
-display:none;
-}
-.div111{
-	position: fixed;
-	margin: 200px 300px auto auto;
-}
-</style>
 {% endblock %}
-
-<!-- <div id="footer" style="background-color:#000000;clear:both;text-align:center;">
-版权 © byyour-side.com</div> -->

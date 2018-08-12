@@ -2,11 +2,11 @@
 * @Author: uni-lovenix
 * @Date:   2018-08-12 20:50:24
 * @Last Modified by:   uni-lovenix
-* @Last Modified time: 2018-08-12 23:14:04
+* @Last Modified time: 2018-08-12 23:17:26
 */
 
 $(document).ready(function(){
-$(".postBtn").click(function(){
+$("#content").on("click", ".postBtn", function(){
 	var cid=$(this).attr("name");
 	
 	comment=$("#ttt"+cid).val();
