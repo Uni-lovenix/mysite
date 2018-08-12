@@ -2,7 +2,7 @@
 * @Author: uni-lovenix
 * @Date:   2018-08-12 20:50:24
 * @Last Modified by:   uni-lovenix
-* @Last Modified time: 2018-08-12 23:17:26
+* @Last Modified time: 2018-08-13 02:11:40
 */
 
 $(document).ready(function(){
@@ -35,6 +35,13 @@ $("#content").on("click", ".postBtn", function(){
 var comments=new Array();
 
 $("#content").on('click', ".flip", function(){
+    var sessionid=$.cookie("sessionid");
+    if(sessionid){
+        
+    } else {
+        alert("请先登录!");
+        return false;
+    }
     $(".commentpanel:eq(" + $(this).index(".flip") + ")").stop(true,false).slideToggle("slow", function(){
     	var cid = $(this).attr("name");
     	for (i=0;i<comments.length;i++){
@@ -60,26 +67,33 @@ $("#content").on('click', ".flip", function(){
 
 });
 
-
 function ajaxcai(cid){
+    var sessionid=$.cookie("sessionid");
+    if(sessionid){
+        
+    } else {
+        alert("请先登录!");
+        return false;
+    }
     $.ajax({
         url: "/ajax_cai/",
         type: "POST",
         data:{"cid":cid},
         headers:{"X-CSRFToken":$('[name="csrfmiddlewaretoken"]').val()},
         success: function(data){
-            if(data.status==200){
+            try {
                 var obj = JSON.parse(data);//字符串转对象
                 if(obj.status){
                     $('#btncai'+cid+' > b').text(obj.data)
-                }else{
+                }
+                else if(obj.status==302){
+                    alert(data);
+                }
+                else{
                     alert(obj.error);
                 }
             }
-            else if(data.status==302){
-                alert(data);
-                window.location.href = data.location;
-            }
+            catch(err){}
         }
     });
 }

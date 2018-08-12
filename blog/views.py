@@ -126,7 +126,7 @@ def own_zone(request):
 	posts = ContentItems.objects.filter(uid=userid).order_by('-posttime')
 	return render(request, 'ownzone.html', {'username':username, 'posts':posts})
 
-@login_required(redirect_field_name='login')
+@login_required
 @csrf_exempt
 def ajax_submit(request):
 	ret = {'status':True, 'error':None, 'data':None}
@@ -147,7 +147,7 @@ def ajax_submit(request):
 def ajax_checkusername(request):
 	pass
 
-@login_required(login_url='/login/')
+@login_required
 @csrf_exempt
 def ajax_cai(request):
 	ret = {'status':True, 'error':None, 'data':None}
@@ -176,7 +176,7 @@ def ajax_cai(request):
 	ret['error']='Unknown error.'
 	return HttpResponse(json.dumps(ret))
 
-@login_required
+@login_required(login_url='/login/')
 @csrf_exempt
 def ajax_remove_content(request):
 	ret = {'status':True, 'error':None, 'data':None}
@@ -190,7 +190,7 @@ def ajax_remove_content(request):
 	ret['error']='Unknown error.'
 	return HttpResponse(json.dumps(ret))
 
-@login_required
+@login_required(login_url='/login/')
 @csrf_exempt
 def ajax_submit_comment(request):
 	ret = {'status':True, 'error':None, 'data':None}

@@ -1,6 +1,7 @@
 {% extends "includes/base.html" %}
 {% block title %}{{username}}'s zone{% endblock %}
-{% block style %}
+{% block script %}
+<script src="../static/script/ownzone.js"></script>
 <style type="text/css">
 	.owndiv {
 		width: 70%;
@@ -12,9 +13,6 @@
 		border-radius: 5px;
 	}
 </style>
-{% endblock %}
-{% block script %}
-<script src="../static/script/ownzone.js"></script>
 {% endblock %}
 {% block content %}
 <div class="container">
