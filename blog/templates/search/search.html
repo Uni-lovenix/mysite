@@ -1,0 +1,55 @@
+{% extends '../includes/base.html' %}
+{% load highlight %}
+
+{% block main %}
+    {% if query %}
+        {% for result in page.object_list %}
+        <div class="ContentDiv">
+            <div class="row">
+                <div class="col-md-12 column">
+                    <div class="Contentdiv1">
+                        <h3>
+                            {{ result.object.uid.username }}
+                        </h3>
+                        <p>
+                             {{ result.object.content }}
+                        </p>
+                        <dl>
+                        <dd>
+                            {{ result.object.posttime }}
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            {{ result.object.postposition }}
+                        </dd>
+                        </dl>
+                        <button id="btncai{{post.cid}}" type="button" class="btn btn-default">踩&nbsp;<b>{{ result.object.cai }}</b></button>
+                        <input type="button" value="评论" class="btn btn-default commentbtn flip" >
+                    </div>
+                    <div name="{{post.cid}}" class="commentpanel">
+                        <!-- <div id="comment{{post.cid}}">
+                            
+                        </div> -->
+                        <!-- <div class="Input_Box">
+                            <textarea id="ttt{{post.cid}}" class="Input_text" maxlength="200" onchange="this.value=this.value.substring(0, 200)" onkeydown="this.value=this.value.substring(0, 200)" onkeyup="this.value=this.value.substring(0, 200)"></textarea>
+                                <a class="postBtn" name="{{post.cid}}">提交</a>
+                        </div> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+            <div class="midDiv no-post">没有搜索到你想要的结果！</div>
+        {% endfor %}
+        {% if page.has_previous or page.has_next %}
+            <div>
+                {% if page.has_previous %}
+                    <a href="?q={{ query }}&amp;page={{ page.previous_page_number }}">{% endif %}&laquo; Previous
+                {% if page.has_previous %}</a>{% endif %}
+                |
+                {% if page.has_next %}<a href="?q={{ query }}&amp;page={{ page.next_page_number }}">{% endif %}Next
+                &raquo;{% if page.has_next %}</a>{% endif %}
+            </div>
+        {% endif %}
+    {% else %}
+        请输入搜索关键词，例如 小壁虎
+    {% endif %}
+{% endblock main %}

@@ -1,0 +1,4 @@
+{{ object.uid.username }}
+{{ object.posttime }}
+{{ object.content }}
+{{ object.cai }}

@@ -37,6 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'haystack',
     'blog',
 ]
 
@@ -69,6 +71,18 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'mysite.wsgi.application'
+
+
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        'ENGINE': 'mysite.whoosh_cn_backend.WhooshEngine',
+        'PATH': os.path.join(os.path.dirname(__file__), 'whoosh_index'),
+    }
+}
+
+# 添加此项，当数据库改变时，会自动更新索引，非常方便
+HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
+HAYSTACK_SEARCH_RESULTS_PER_PAGE  =  7
 
 
 # Database

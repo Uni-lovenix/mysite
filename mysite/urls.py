@@ -19,5 +19,7 @@ from django.contrib import admin
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^', include('blog.urls')),
+    url(r'^api/', include('blog.api.urls')),
+    url(r'^search/', include('haystack.urls')),
     # url(r'^blog/', include('blog.urls')),
 ]
