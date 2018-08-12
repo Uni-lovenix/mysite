@@ -176,7 +176,7 @@ def ajax_cai(request):
 	ret['error']='Unknown error.'
 	return HttpResponse(json.dumps(ret))
 
-@login_required(login_url='/login/')
+@login_required
 @csrf_exempt
 def ajax_remove_content(request):
 	ret = {'status':True, 'error':None, 'data':None}
@@ -190,7 +190,7 @@ def ajax_remove_content(request):
 	ret['error']='Unknown error.'
 	return HttpResponse(json.dumps(ret))
 
-@login_required(login_url='/login/')
+@login_required
 @csrf_exempt
 def ajax_submit_comment(request):
 	ret = {'status':True, 'error':None, 'data':None}
@@ -229,6 +229,7 @@ def ajax_comment(request):
 				return render(request, 'includes/comment.html', {'comments':comments})
 	except:
 		return "<div>无评论!</div>"
+	return HttpResponse()
 
 
 @csrf_exempt

@@ -1,7 +1,11 @@
 {% extends '../includes/base.html' %}
+{% block script %}
+<script src="../static/script/blogcontent.js"></script>
+{% endblock %}
 {% load highlight %}
 
 {% block main %}
+<div id="content">
     {% if query %}
         {% for result in page.object_list %}
         <div class="ContentDiv">
@@ -25,19 +29,19 @@
                         <input type="button" value="评论" class="btn btn-default commentbtn flip" >
                     </div>
                     <div name="{{post.cid}}" class="commentpanel">
-                        <!-- <div id="comment{{post.cid}}">
+                        <div id="comment{{post.cid}}">
                             
-                        </div> -->
-                        <!-- <div class="Input_Box">
+                        </div>
+                        <div class="Input_Box">
                             <textarea id="ttt{{post.cid}}" class="Input_text" maxlength="200" onchange="this.value=this.value.substring(0, 200)" onkeydown="this.value=this.value.substring(0, 200)" onkeyup="this.value=this.value.substring(0, 200)"></textarea>
                                 <a class="postBtn" name="{{post.cid}}">提交</a>
-                        </div> -->
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
         {% empty %}
-            <div class="midDiv no-post">没有搜索到你想要的结果！</div>
+            <div class="ContentDiv no-post">没有搜索到你想要的结果！</div>
         {% endfor %}
         {% if page.has_previous or page.has_next %}
             <div>
@@ -52,4 +56,5 @@
     {% else %}
         请输入搜索关键词，例如 小壁虎
     {% endif %}
+</div>
 {% endblock main %}

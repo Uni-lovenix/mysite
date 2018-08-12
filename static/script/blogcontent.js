@@ -1,10 +1,3 @@
-/*
-* @Author: uni-lovenix
-* @Date:   2018-08-12 20:50:24
-* @Last Modified by:   uni-lovenix
-* @Last Modified time: 2018-08-13 02:11:40
-*/
-
 $(document).ready(function(){
 $("#content").on("click", ".postBtn", function(){
 	var cid=$(this).attr("name");
@@ -14,6 +7,10 @@ $("#content").on("click", ".postBtn", function(){
 		alert("评论不能为空！");
 		return false;
 	}
+    if(!is_logined()){
+        alert("请先登录!");
+        return false;
+    }
 	cleantextarea(cid);
 	$.ajax({
 		url: "/ajax_submit_comment/",
@@ -35,13 +32,6 @@ $("#content").on("click", ".postBtn", function(){
 var comments=new Array();
 
 $("#content").on('click', ".flip", function(){
-    var sessionid=$.cookie("sessionid");
-    if(sessionid){
-        
-    } else {
-        alert("请先登录!");
-        return false;
-    }
     $(".commentpanel:eq(" + $(this).index(".flip") + ")").stop(true,false).slideToggle("slow", function(){
     	var cid = $(this).attr("name");
     	for (i=0;i<comments.length;i++){
@@ -68,10 +58,7 @@ $("#content").on('click', ".flip", function(){
 });
 
 function ajaxcai(cid){
-    var sessionid=$.cookie("sessionid");
-    if(sessionid){
-        
-    } else {
+    if(!is_logined()){
         alert("请先登录!");
         return false;
     }
@@ -96,7 +83,10 @@ function ajaxcai(cid){
             catch(err){}
         }
     });
+    return true;
 }
+
+
 function cleantextarea(cid){
 	$("#ttt"+cid).val("");
 }

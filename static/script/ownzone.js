@@ -1,4 +1,6 @@
 function ajax_delete(cid){
+    if(!is_logined())
+        return false;
     $.ajax({
         url: "/ajax_remove_content/",
         type: "POST",
@@ -16,6 +18,8 @@ function ajax_delete(cid){
     });
 }
 function ajaxpost(){
+    if(!is_logined())
+        return false;
     $.ajax({
         url: "/submit_text/",
         type: "POST",
