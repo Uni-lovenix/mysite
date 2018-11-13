@@ -6,7 +6,7 @@ import django.utils.timezone as timezone
 
 class ContentItems(models.Model):
 	cid = models.AutoField(primary_key=True)
-	uid = models.ForeignKey(User, on_delete=False, related_name='auth_user_contentItems')
+	uid = models.ForeignKey(User, on_delete=models.CASCADE, related_name='auth_user_contentItems')
 	posttime = models.DateTimeField(default=timezone.now)
 	postposition = models.CharField(max_length=90, default='')
 	content = models.TextField()

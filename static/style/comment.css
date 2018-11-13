@@ -1,4 +1,4 @@
-.intop {
+.navbar-self-intop {
     position: fixed;
     z-index: 9;
     top: 0px;
@@ -15,7 +15,7 @@
     position: relative;
     padding-right: 15px;
     padding-left: 15px;
-    margin: 50px auto auto auto;
+    margin: 2px auto auto auto;
     border: 1px solid;
     border-radius: 15px;
 }
