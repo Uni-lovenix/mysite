@@ -102,7 +102,7 @@ DATABASES = {
         # 'ENGINE': 'mysql.connector.django',
         'NAME': 'testutf',
         'USER': 'root',
-        'PASSWORD': '1qaz@WSX',
+        'PASSWORD': 'root',
         'HOST':'127.0.0.1',
         'PORT':'3306',
     }
@@ -157,3 +157,4 @@ STATICFILES_DIRS = (
     # Don't forget to use absolute paths, not relative paths.
     os.path.join(HERE, 'static/'),
 )
+SESSION_COOKIE_HTTPONLY = False
