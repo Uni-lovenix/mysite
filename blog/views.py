@@ -5,14 +5,14 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponseRedirect
-from django.template import loader
+# from django.template import loader
 from django.http import HttpResponse, Http404
 from django.shortcuts import render
 from blog.models import ContentItems, CaiZan, Comment
 from django import forms
-from django.core import serializers
+# from django.core import serializers
 from django.db.models import Q
-import datetime
+# import datetime
 import json
 import re
 
@@ -112,9 +112,10 @@ def ajax_getcontents(request):
 		current=check_cid(current)
 		num=7
 		if current==-1 or num==-1:
+			ret = {}
 			ret['status']=False
 			ret['error']='request data error.'
-			return Http404()
+			return Http404(ret)
 		posts=ContentItems.objects.all().order_by('-posttime')[current:current+num]
 		return render(request, 'includes/content.html', {'posts':posts})
 
@@ -237,5 +238,4 @@ def search(request):
     if request.method == 'POST':
         keyword = request.POST.get('k')
         contents = ContentItems.objects.filter(Q(content__icontains=keyword))
-        print(comments)
-        return render(request, 'includes/content.html', {'comments': content})
+        return render(request, 'includes/content.html', {'comments': contents})
