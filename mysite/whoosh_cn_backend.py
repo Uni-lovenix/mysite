@@ -28,7 +28,8 @@ from jieba.analyse import ChineseAnalyzer
 try:
     import whoosh
 except ImportError:
-    raise MissingDependency("The 'whoosh' backend requires the installation of 'Whoosh'. Please refer to the documentation.")
+    raise MissingDependency(
+        "The 'whoosh' backend requires the installation of 'Whoosh'. Please refer to the documentation.")
 
 # Handle minimum requirement.
 if not hasattr(whoosh, '__version__') or whoosh.__version__ < (2, 5, 0):
@@ -46,7 +47,8 @@ from whoosh.searching import ResultsPage
 from whoosh.writing import AsyncWriter
 
 
-DATETIME_REGEX = re.compile('^(?P<year>\d{4})-(?P<month>\d{2})-(?P<day>\d{2})T(?P<hour>\d{2}):(?P<minute>\d{2}):(?P<second>\d{2})(\.\d{3,6}Z?)?$')
+DATETIME_REGEX = re.compile(
+    r'^(?P<year>\d{4})-(?P<month>\d{2})-(?P<day>\d{2})T(?P<hour>\d{2}):(?P<minute>\d{2}):(?P<second>\d{2})(\.\d{3,6}Z?)?$')
 LOCALS = threading.local()
 LOCALS.RAM_STORE = None
 
@@ -88,7 +90,7 @@ class WhooshSearchBackend(BaseSearchBackend):
 
         if self.use_file_storage and not self.path:
             raise ImproperlyConfigured(
-            "You must specify a 'PATH' in your settings for connection '%s'." % connection_alias)
+                "You must specify a 'PATH' in your settings for connection '%s'." % connection_alias)
 
         self.log = logging.getLogger('haystack')
 
