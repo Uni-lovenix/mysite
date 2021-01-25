@@ -23,7 +23,7 @@ from haystack.models import SearchResult
 from haystack.utils import log as logging
 from haystack.utils import get_identifier, get_model_ct
 from haystack.utils.app_loading import haystack_get_model
-from jieba.analyse import ChineseAnalyzer 
+from jieba.analyse import ChineseAnalyzer
 
 try:
     import whoosh
@@ -87,7 +87,8 @@ class WhooshSearchBackend(BaseSearchBackend):
             self.use_file_storage = False
 
         if self.use_file_storage and not self.path:
-            raise ImproperlyConfigured("You must specify a 'PATH' in your settings for connection '%s'." % connection_alias)
+            raise ImproperlyConfigured(
+            "You must specify a 'PATH' in your settings for connection '%s'." % connection_alias)
 
         self.log = logging.getLogger('haystack')
 
@@ -116,7 +117,8 @@ class WhooshSearchBackend(BaseSearchBackend):
 
             self.storage = LOCALS.RAM_STORE
 
-        self.content_field_name, self.schema = self.build_schema(connections[self.connection_alias].get_unified_index().all_searchfields())
+        self.content_field_name, self.schema = self.build_schema(
+            connections[self.connection_alias].get_unified_index().all_searchfields())
         self.parser = QueryParser(self.content_field_name, schema=self.schema)
 
         if new_index is True:
@@ -140,27 +142,34 @@ class WhooshSearchBackend(BaseSearchBackend):
         initial_key_count = len(schema_fields)
         content_field_name = ''
 
-        for field_name, field_class in fields.items():
+        for _, field_class in fields.items():
             if field_class.is_multivalued:
                 if field_class.indexed is False:
-                    schema_fields[field_class.index_fieldname] = IDLIST(stored=True, field_boost=field_class.boost)
+                    schema_fields[field_class.index_fieldname] = IDLIST(
+                        stored=True, field_boost=field_class.boost)
                 else:
-                    schema_fields[field_class.index_fieldname] = KEYWORD(stored=True, commas=True, scorable=True, field_boost=field_class.boost)
+                    schema_fields[field_class.index_fieldname] = KEYWORD(
+                        stored=True, commas=True, scorable=True, field_boost=field_class.boost)
             elif field_class.field_type in ['date', 'datetime']:
                 schema_fields[field_class.index_fieldname] = DATETIME(stored=field_class.stored, sortable=True)
             elif field_class.field_type == 'integer':
-                schema_fields[field_class.index_fieldname] = NUMERIC(stored=field_class.stored, numtype=int, field_boost=field_class.boost)
+                schema_fields[field_class.index_fieldname] = NUMERIC(
+                    stored=field_class.stored, numtype=int, field_boost=field_class.boost)
             elif field_class.field_type == 'float':
-                schema_fields[field_class.index_fieldname] = NUMERIC(stored=field_class.stored, numtype=float, field_boost=field_class.boost)
+                schema_fields[field_class.index_fieldname] = NUMERIC(
+                    stored=field_class.stored, numtype=float, field_boost=field_class.boost)
             elif field_class.field_type == 'boolean':
                 # Field boost isn't supported on BOOLEAN as of 1.8.2.
                 schema_fields[field_class.index_fieldname] = BOOLEAN(stored=field_class.stored)
             elif field_class.field_type == 'ngram':
-                schema_fields[field_class.index_fieldname] = NGRAM(minsize=3, maxsize=15, stored=field_class.stored, field_boost=field_class.boost)
+                schema_fields[field_class.index_fieldname] = NGRAM(
+                    minsize=3, maxsize=15, stored=field_class.stored, field_boost=field_class.boost)
             elif field_class.field_type == 'edge_ngram':
-                schema_fields[field_class.index_fieldname] = NGRAMWORDS(minsize=2, maxsize=15, at='start', stored=field_class.stored, field_boost=field_class.boost)
+                schema_fields[field_class.index_fieldname] = NGRAMWORDS(
+                    minsize=2, maxsize=15, at='start', stored=field_class.stored, field_boost=field_class.boost)
             else:
-                schema_fields[field_class.index_fieldname] = TEXT(stored=True, analyzer=ChineseAnalyzer(), field_boost=field_class.boost, sortable=True)
+                schema_fields[field_class.index_fieldname] = TEXT(
+                    stored=True, analyzer=ChineseAnalyzer(), field_boost=field_class.boost, sortable=True)
 
             if field_class.document is True:
                 content_field_name = field_class.index_fieldname
@@ -169,7 +178,8 @@ class WhooshSearchBackend(BaseSearchBackend):
         # Fail more gracefully than relying on the backend to die if no fields
         # are found.
         if len(schema_fields) <= initial_key_count:
-            raise SearchBackendError("No fields were found in any search_indexes. Please correct this before attempting to search.")
+            raise SearchBackendError(
+                "No fields were found in any search_indexes. Please correct this before attempting to search.")
 
         return (content_field_name, Schema(**schema_fields))
 
@@ -456,7 +466,9 @@ class WhooshSearchBackend(BaseSearchBackend):
                     'spelling_suggestion': None,
                 }
 
-            results = self._process_results(raw_page, highlight=highlight, query_string=query_string, spelling_query=spelling_query, result_class=result_class)
+            results = self._process_results(
+                raw_page, highlight=highlight, query_string=query_string,
+                spelling_query=spelling_query, result_class=result_class)
             searcher.close()
 
             if hasattr(narrow_searcher, 'close'):
@@ -611,7 +623,7 @@ class WhooshSearchBackend(BaseSearchBackend):
                     if string_key in index.fields and hasattr(index.fields[string_key], 'convert'):
                         # Special-cased due to the nature of KEYWORD fields.
                         if index.fields[string_key].is_multivalued:
-                            if value is None or len(value) is 0:
+                            if value is None or len(value) == 0:
                                 additional_fields[string_key] = []
                             else:
                                 additional_fields[string_key] = value.split(',')
@@ -729,7 +741,9 @@ class WhooshSearchBackend(BaseSearchBackend):
                 for dk, dv in date_values.items():
                     date_values[dk] = int(dv)
 
-                return datetime(date_values['year'], date_values['month'], date_values['day'], date_values['hour'], date_values['minute'], date_values['second'])
+                return datetime(
+                    date_values['year'], date_values['month'], date_values['day'],
+                    date_values['hour'], date_values['minute'], date_values['second'])
 
         try:
             # Attempt to use json to load the values.
