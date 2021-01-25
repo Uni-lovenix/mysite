@@ -82,13 +82,12 @@ HAYSTACK_CONNECTIONS = {
 
 # 添加此项，当数据库改变时，会自动更新索引，非常方便
 HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
-HAYSTACK_SEARCH_RESULTS_PER_PAGE  =  7
-
+HAYSTACK_SEARCH_RESULTS_PER_PAGE = 7
 
 # Database
 # https://docs.djangoproject.com/en/dev/ref/settings/#databases
 '''
-Using sqlite3 
+Using sqlite3
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -102,9 +101,9 @@ DATABASES = {
         # 'ENGINE': 'mysql.connector.django',
         'NAME': 'testutf',
         'USER': 'root',
-        'PASSWORD': 'root',
-        'HOST':'127.0.0.1',
-        'PORT':'3306',
+        'PASSWORD': '*****',
+        'HOST': '127.0.0.1',
+        'PORT': '3306',
     }
 }
 
